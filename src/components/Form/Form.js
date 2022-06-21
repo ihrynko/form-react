@@ -1,79 +1,75 @@
 import { Component } from "react";
 import "./Form.scss";
-import Input from "../Input";
+import Input from "./Input";
 
 class Form extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      fields: {
-        name: {
-          title: "Name",
-          type: "name",
-          name: "name",
-          value: "",
-          error: false,
-          placeholder: "Input your name..",
-          validator: (value = "") => {
-            return value.length >= 2
-              ? false
-              : !value.length
-              ? "Required"
-              : "Name is too short";
-          },
-        },
-        email: {
-          title: "Email",
-          type: "email",
-          name: "email",
-          value: "",
-          error: false,
-          placeholder: "Input your email..",
-          validator: (value = "") => {
-            return value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
-              ? false
-              : "Email is invalid";
-          },
-        },
-        password: {
-          title: "Password",
-          type: "password",
-          name: "password",
-          autoComplete: "false",
-          value: "",
-          error: false,
-          placeholder: "Input your password..",
-          validator: (value = "") => {
-            return value.match(
-              /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g
-            )
-              ? false
-              : !value.length
-              ? "Required"
-              : "Password is too simple";
-          },
-        },
-        passwordConfirm: {
-          title: "Password confirm",
-          type: "password",
-          name: "passwordConfirm",
-          autoComplete: "false",
-          value: "",
-          error: false,
-          placeholder: "Confirm your password..",
-          validator: (value = "", allValues) => {
-            return value === allValues.password
-              ? false
-              : !value.length
-              ? "Required"
-              : "Passwords dont match";
-          },
+  state = {
+    fields: {
+      name: {
+        title: "Name",
+        type: "name",
+        name: "name",
+        value: "",
+        error: false,
+        placeholder: "Input your name..",
+        validator: (value = "") => {
+          return value.length >= 2
+            ? false
+            : !value.length
+            ? "Required"
+            : "Name is too short";
         },
       },
-      isError: null,
-    };
-  }
+      email: {
+        title: "Email",
+        type: "email",
+        name: "email",
+        value: "",
+        error: false,
+        placeholder: "Input your email..",
+        validator: (value = "") => {
+          return value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
+            ? false
+            : "Email is invalid";
+        },
+      },
+      password: {
+        title: "Password",
+        type: "password",
+        name: "password",
+        autoComplete: "false",
+        value: "",
+        error: false,
+        placeholder: "Input your password..",
+        validator: (value = "") => {
+          return value.match(
+            /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/g
+          )
+            ? false
+            : !value.length
+            ? "Required"
+            : "Password is too simple";
+        },
+      },
+      passwordConfirm: {
+        title: "Password confirm",
+        type: "password",
+        name: "passwordConfirm",
+        autoComplete: "false",
+        value: "",
+        error: false,
+        placeholder: "Confirm your password..",
+        validator: (value = "", allValues) => {
+          return value === allValues.password
+            ? false
+            : !value.length
+            ? "Required"
+            : "Passwords dont match";
+        },
+      },
+    },
+    isError: null,
+  };
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -104,6 +100,7 @@ class Form extends Component {
               console.log(`${fieldName}: ${fieldState.value}`);
             }
           );
+          this.handleReset();
         }
       }
     );
@@ -173,8 +170,7 @@ class Form extends Component {
     });
   };
 
-  handleReset = (event) => {
-    event.preventDefault();
+  handleReset = () => {
     let updatedFields = {};
     Object.entries(this.state.fields).map(([fieldName, fieldState]) => {
       const updatedField = {
@@ -190,18 +186,21 @@ class Form extends Component {
   handleSubmitButton = () => {
     let errors = [];
     let values = [];
+
     Object.entries(this.state.fields).forEach(([_fieldName, fieldState]) => {
       let error = fieldState.error;
       let value = fieldState.value;
       errors.push(error);
       values.push(value);
     });
-    if (
-      errors.every((error) => error === false) &&
-      values.every((value) => value !== "")
-    ) {
+
+    const isNotError = errors.every((error) => error === false);
+    const isNotEmptyField = values.every((value) => value !== "");
+
+    if (isNotError && isNotEmptyField) {
       return false;
     }
+
     return true;
   };
 
@@ -209,12 +208,12 @@ class Form extends Component {
     const { fields } = this.state;
     return (
       <form className="form" onSubmit={this.handleSubmit}>
-        {Object.entries(fields).map(([_, fieldState], index) => {
+        {Object.entries(fields).map(([fieldName, fieldState]) => {
           const { title, name, type, autoComplete, placeholder, error, value } =
             fieldState;
           return (
             <Input
-              key={index}
+              key={fieldName}
               title={title}
               autoComplete={autoComplete}
               type={type}
