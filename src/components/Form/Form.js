@@ -75,14 +75,17 @@ class Form extends Component {
   };
 
   handleSubmitButton = () => {
+    const { fields } = this.state;
     let errors = [];
     let values = [];
 
-    Object.entries(this.state.fields).forEach(([_fieldName, fieldState]) => {
+    Object.entries(fields).forEach(([fieldName, fieldState]) => {
       let error = fieldState.error;
-      let value = fieldState.value;
+      if (fieldName !== "email") {
+        let value = fieldState.value;
+        values.push(value);
+      }
       errors.push(error);
-      values.push(value);
     });
 
     const isNotError = errors.every((error) => error === false);
