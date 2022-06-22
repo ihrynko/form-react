@@ -46,6 +46,7 @@ class Form extends Component {
     const currentField = this.state.fields[name];
 
     const error = currentField.validator(value, password.value);
+
     if (name === "password") {
       const passwordConfirmError = passwordConfirm.validator(
         passwordConfirm.value,
