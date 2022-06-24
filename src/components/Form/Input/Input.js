@@ -13,17 +13,15 @@ const Input = ({
 }) => {
   return (
     <div className="group">
-      <label>
-        {title}
-        <input
-          type={type}
-          placeholder={placeholder}
-          autoComplete={autoComplete}
-          name={name}
-          value={value}
-          onChange={onChange}
-        />
-      </label>
+      <label> {title} </label>
+      <input
+        type={type}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        name={name}
+        value={value}
+        onChange={onChange}
+      />
       <div className="error">
         <span>{error.length > 0 && error}</span>
       </div>

@@ -31,9 +31,6 @@ class Form extends Component {
       },
       () => {
         if (!isError) {
-          Object.entries(fields).forEach(([fieldName, fieldState]) => {
-            console.log(`${fieldName}: ${fieldState.value}`);
-          });
           this.handleReset();
         }
       }
@@ -102,7 +99,11 @@ class Form extends Component {
   render() {
     const { fields } = this.state;
     return (
-      <form className="form" onSubmit={this.handleSubmit}>
+      <form
+        className="form"
+        onSubmit={this.handleSubmit}
+        onReset={this.handleReset}
+      >
         {Object.entries(fields).map(([fieldName, fieldState]) => {
           const { title, name, type, autoComplete, placeholder, error, value } =
             fieldState;
@@ -121,7 +122,7 @@ class Form extends Component {
           );
         })}
         <div className="button-container"></div>
-        <button onClick={this.handleReset} className="button">
+        <button type="reset" className="button">
           Reset
         </button>
         <button
